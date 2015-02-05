@@ -9,27 +9,33 @@
 import UIKit
 
 protocol IModel {
-  func attachObserver(observer: ModelObserver)
-  func detchObserver(observer: ModelObserver)
   func notifyObserver()
 }
 
 class Model: NSObject, IModel {
   
-  var colorRed: Int
-  var colorGreen: Int
-  var colorBlue: Int
-  var observerList: [ModelObserver] = []
+  var notificationCenter: NSNotificationCenter = NSNotificationCenter.defaultCenter()
   
-  override init() {
-    colorRed = 0
-    colorGreen = 0
-    colorBlue = 0
+  var colorRed: Int = 0 {
+    didSet {
+      notifyObserver()
+    }
+  }
+  
+  var colorGreen: Int = 0 {
+    didSet {
+      notifyObserver()
+    }
+  }
+  
+  var colorBlue: Int = 0 {
+    didSet {
+      notifyObserver()
+    }
   }
   
   func setColorRed(currentColor: Int) {
     self.colorRed = currentColor
-    self.notifyObserver()
   }
   
   func getColorRed() -> Int {
@@ -38,7 +44,6 @@ class Model: NSObject, IModel {
   
   func setColorGreen(currentColor: Int) {
     self.colorGreen = currentColor
-    self.notifyObserver()
   }
   
   func getColorGreen() -> Int {
@@ -47,26 +52,14 @@ class Model: NSObject, IModel {
   
   func setColorBlue(currentColor: Int) {
     self.colorBlue = currentColor
-    self.notifyObserver()
   }
   
   func getColorBlue() -> Int {
     return self.colorBlue
   }
   
-  
-  func attachObserver(observer: ModelObserver) {
-    self.observerList.append(observer)
-  }
-  
-  func detchObserver(observer: ModelObserver) {
-    println("detach Observer")
-  }
-  
   func notifyObserver() {
-    for observer: ModelObserver in self.observerList {
-      observer.updateObserver(self.getColorRed(), green: self.getColorGreen(), blue: self.getColorBlue())
-    }
+    self.notificationCenter.postNotificationName("colorDidChange", object: nil, userInfo: ["red": self.colorRed, "green": self.colorGreen, "blue": self.colorBlue])
   }
   
 }

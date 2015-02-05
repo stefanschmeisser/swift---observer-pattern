@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ModelObserver {
-  func updateObserver(red: Int, green: Int, blue: Int)
+  func updateObserver(notification: NSNotification)
 }
 
 class ViewController: UIViewController, ModelObserver {
@@ -23,6 +23,7 @@ class ViewController: UIViewController, ModelObserver {
   @IBOutlet weak var colorTextFieldBlue: UITextField!
   
   var model: Model = Model()
+  var notificationCenter = NSNotificationCenter.defaultCenter()
 
   @IBAction func onColorSilderRedValueChanged(sender: AnyObject) {
     model.setColorRed(Int(self.colorSliderRed.value))
@@ -50,23 +51,23 @@ class ViewController: UIViewController, ModelObserver {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.model.attachObserver(self)
-    // Do any additional setup after loading the view, typically from a nib.
+    self.notificationCenter.addObserver(self, selector: "updateObserver:", name: "colorDidChange", object: nil)
   }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
   }
 
-  func updateObserver(red: Int, green: Int, blue: Int) {
+  func updateObserver(notification: NSNotification) {
+    let red = notification.userInfo!["red"] as Int
+    let green = notification.userInfo!["green"] as Int
+    let blue = notification.userInfo!["blue"] as Int
     self.colorSliderRed.value = Float(red)
     self.colorSliderGreen.value = Float(green)
     self.colorSliderBlue.value = Float(blue)
     self.colorTextFieldRed.text = String(red)
     self.colorTextFieldGreen.text = String(green)
     self.colorTextFieldBlue.text = String(blue)
-    //self.colorView.backgroundColor.  = UIColor(red: CGFloat(red), green: green, blue: blue, alpha: 1.0)
     self.colorView.backgroundColor = UIColor(red: (CGFloat(red) / 255), green: (CGFloat(green) / 255), blue: (CGFloat(blue) / 255), alpha: 1.0)
   }
 

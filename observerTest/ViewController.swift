@@ -51,12 +51,10 @@ class ViewController: UIViewController, ModelObserver {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.model.attachObserver(self)
-    // Do any additional setup after loading the view, typically from a nib.
   }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
   }
 
   func updateObserver(red: Int, green: Int, blue: Int) {
@@ -66,7 +64,6 @@ class ViewController: UIViewController, ModelObserver {
     self.colorTextFieldRed.text = String(red)
     self.colorTextFieldGreen.text = String(green)
     self.colorTextFieldBlue.text = String(blue)
-    //self.colorView.backgroundColor.  = UIColor(red: CGFloat(red), green: green, blue: blue, alpha: 1.0)
     self.colorView.backgroundColor = UIColor(red: (CGFloat(red) / 255), green: (CGFloat(green) / 255), blue: (CGFloat(blue) / 255), alpha: 1.0)
   }
 
